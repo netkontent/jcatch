@@ -1,0 +1,28 @@
+{
+  "name": "errorless",
+  "version": "1.0.0",
+  "description": "JS/NODE lib for cathing client errors",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netkontent/errorless.git"
+  },
+  "keywords": [
+    "js",
+    "node.js",
+    "js",
+    "errors"
+  ],
+  "author": "Daniel Pakos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/netkontent/errorless/issues"
+  },
+  "homepage": "https://github.com/netkontent/errorless#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
