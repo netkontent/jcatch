@@ -1,6 +1,6 @@
 module.exports = function(req, res) {
 
     // handlebars - render
-    res.render('home');
+    res.render('test-error1', { layout: 'tests' });
 
 }

@@ -5,10 +5,9 @@ module.exports = function(root) {
     /* ##### START: ROUTES ##### */
     root.app.get('/', _controller('home.js') );
     root.app.get('/test', _controller('test.js') );
-    root.app.get('/contact', _controller('contact.js') );
 
     // 404 - as last
-    root.app.use( (req, res) => {
+    root.app.use(/^\/(?!api).*/, (req, res) => {
       res.status('404').send('404');
     } );
 
@@ -46,6 +45,6 @@ module.exports = function(root) {
 
   return {
     init: init
-  }
+  };
 
-}
+};
