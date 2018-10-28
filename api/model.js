@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/errorlog');
+mongoose
+  .connect('mongodb://mongo:27017/jcatch', { useNewUrlParser: true })
+  .then(() => { console.log('MongoDB connected.'); })
+  .catch(err => console.log('err'));
 
-var errorLogSchema = mongoose.Schema({
+let jcatchSchema = mongoose.Schema({
   user_id: String,
   type: String,
   url: String,
@@ -18,6 +21,6 @@ var errorLogSchema = mongoose.Schema({
   added:  { type: Date, default: Date.now },
 });
 
-const ErrorLog = mongoose.model('errorlog', errorLogSchema);
+const jcatchModel = mongoose.model('jcatch', jcatchSchema);
 
-module.exports = ErrorLog;
+module.exports = jcatchModel;

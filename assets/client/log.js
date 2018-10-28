@@ -7,7 +7,10 @@ function ErrorLess() {
 
     ;(function init() {
 
-        if( ! user_id ) return false;
+        if( ! user_id ) {
+          console.log('user id not found');
+          return false;
+        }
 
         window.onerror = trackError;
 
@@ -144,11 +147,33 @@ var ErorrLessAPI = function( user_id, error ) {
 
       function ajax(callback, data, url, method) {
 
-          url = url || '//localhost:3000/api/log/';
+          url = url || 'http://jcatch.io/api/log/add/';
           method = method || 'POST';
           data = data || null;
+          var cors = null;
 
-          xhr = new XMLHttpRequest();
+          var xhr = new XMLHttpRequest();
+
+          if ("withCredentials" in xhr) {
+
+            // Check if the XMLHttpRequest object has a "withCredentials" property.
+            // "withCredentials" only exists on XMLHTTPRequest2 objects.
+            //xhr.open(method, url, true);
+            cors = true;
+
+          } else if (typeof XDomainRequest != "undefined") {
+
+            // Otherwise, check if XDomainRequest.
+            // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+            xhr = new XDomainRequest();
+            //xhr.open(method, url);
+
+          } else {
+
+            // Otherwise, CORS is not supported by the browser.
+            xhr = null;
+
+          }
 
           xhr.onreadystatechange = function() {
 

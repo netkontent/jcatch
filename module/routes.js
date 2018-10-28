@@ -8,7 +8,7 @@ module.exports = function(root) {
 
     // 404 - as last
     root.app.use(/^\/(?!api).*/, (req, res) => {
-      res.status('404').send('404');
+      res.status('404').send('api - 404');
     } );
 
 

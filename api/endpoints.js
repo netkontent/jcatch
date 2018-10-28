@@ -1,12 +1,17 @@
 module.exports = function(root) {
 
   const bodyParser = require('body-parser');
-  const ErrorLog = require('./model.js');
+  const ErrorModel = require('./model.js');
 
   root.app.use(bodyParser.urlencoded({extended: false}));
   root.app.use(bodyParser.json());
 
-  root.app.post('/api/log/', function(req, res) {
+  root.app.get('/api/log/add/', function(req, res) {
+
+    res.send('Test');
+  });
+
+  root.app.post('/api/log/add/', function(req, res) {
 
     if( ! req.body ) {
       res.send('Error: no data.');
@@ -15,9 +20,9 @@ module.exports = function(root) {
 
     let data = req.body;
 
-    var a = new ErrorLog({
+    let a = new ErrorModel({
       user_id: data.user,
-      type: 'Error', // data.error.type,
+      type: 'error', // data.error.type,
       url: data.error.url,
       file: data.error.file,
       message: data.error.message,
@@ -31,8 +36,11 @@ module.exports = function(root) {
       added: new Date().getTime(),
     });
 
-    a.save(function(err, a) { console.log(err);
-      if(err) return res.status(500).send('Error occurred: database error.');
+    a.save(function(err, a) {
+      if(err) {
+        console.log( err );
+        return res.status(500).send('Error occurred: database error.');
+      }
       res.json({ id: a._id });
     });
 
@@ -44,5 +52,4 @@ module.exports = function(root) {
   } );
 
   return root;
-
 }

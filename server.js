@@ -4,6 +4,16 @@ const root = { _dir: __dirname };
       root.log = require('./module/log.js');
       root.app = express();
 
+      var allowCrossDomain = function(req, res, next) {
+          res.header('Access-Control-Allow-Origin', "*");
+          res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+          res.header('Access-Control-Allow-Headers', 'Content-Type');
+          next();
+      }
+
+  root.app.use(allowCrossDomain);
+
+root.app.use('/api', require('cors')());
       root.app.use(express.static('public')); // make /public -> public root
 
 const handlebars = require('express3-handlebars').create({
@@ -18,7 +28,8 @@ const handlebars = require('express3-handlebars').create({
       root.app.set('view engine', 'handlebars');
 
 const routes = require('./module/routes.js')(root);
-      routes.init();
+      routes.init(); // as method, maybe we can add other method there
+
 
 const api = require('./api/endpoints.js')(root);
 

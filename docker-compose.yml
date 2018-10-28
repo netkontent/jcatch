@@ -1,0 +1,19 @@
+version: '3'
+services:
+  jcatch:
+    container_name: jcatch
+    restart: always
+    build: .
+    image: netkontent/jcatch
+    ports:
+      - '80:3000'
+    links:
+      - mongo
+    environment:
+     - MONGODB_HOST=mongo
+     - MONGODB_PORT=27017
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
