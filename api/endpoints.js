@@ -1,14 +1,14 @@
 module.exports = function(root) {
 
   const bodyParser = require('body-parser');
-  const ErrorModel = require('./model.js');
+  const jCatchModel = require('./model.js');
 
   root.app.use(bodyParser.urlencoded({extended: false}));
   root.app.use(bodyParser.json());
 
   root.app.get('/api/log/add/', function(req, res) {
 
-    res.send('Test');
+    res.send('Test API');
   });
 
   root.app.post('/api/log/add/', function(req, res) {
@@ -20,7 +20,7 @@ module.exports = function(root) {
 
     let data = req.body;
 
-    let a = new ErrorModel({
+    let a = new jCatchModel({
       user_id: data.user,
       type: 'error', // data.error.type,
       url: data.error.url,

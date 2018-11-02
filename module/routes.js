@@ -17,7 +17,7 @@ module.exports = function(root) {
 
   }
 
-  // private methods
+  // private method
   function _controller( ctrl_name ) {
 
     const fs = require('fs');
@@ -36,7 +36,7 @@ module.exports = function(root) {
 
 
     function _missing_controller( req, res, next ) {
-      root.log('Client tried access not existing but defined route: ' + req.url, 'error', {save: true});
+      root.log('Client tried access to not existing, but defined route: ' + req.url, 'error', {save: true});
       return next(); // skip to 404
     }
 

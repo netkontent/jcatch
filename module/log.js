@@ -75,8 +75,6 @@ module.exports = function( obj, flag, opts ) {
           format = format.replace('i', i);
           format = format.replace('s', s);
 
-          console.log( format );
-
       return format;
 
   }

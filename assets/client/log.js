@@ -1,4 +1,4 @@
-function ErrorLess() {
+function jCatchClient() {
 
     var user_id = getUserID(),
         _errors = [],
@@ -12,13 +12,13 @@ function ErrorLess() {
           return false;
         }
 
-        window.onerror = trackError;
+        //window.onerror = trackError;
 
         window.addEventListener('error', function(error) {
             trackErrorEvent(error);
         });
 
-        console.log('Logger is running...');
+        console.log('jCatch is running...');
 
     })();
 
@@ -47,7 +47,7 @@ function ErrorLess() {
       stockError( _err );
 
       if( ! _api ) {
-        _api = new ErorrLessAPI(user_id, _err);
+        _api = new jCatchAPI(user_id, _err);
       } else {
         _api.log( _err );
       }
@@ -84,7 +84,7 @@ function ErrorLess() {
 
     function getUserID() {
 
-      var script_src = document.getElementById('errorless').src,
+      var script_src = document.getElementById('jcatch').src,
           user_id = decodeURIComponent(script_src.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent('u').replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
 
     return user_id;
@@ -95,9 +95,8 @@ function ErrorLess() {
         mode = mode || '';
         keys = keys || {};
 
-        var defaults = ['userAgent'];
-
-        var nav = window.navigator,
+        var defaults = ['userAgent'],
+            nav = window.navigator,
             client = {};
 
         switch( mode ) {
@@ -110,7 +109,7 @@ function ErrorLess() {
 
             default:
 
-                for(var i=0,size=defaults.length;i<size;i++ ) {
+                for(var i=0,size=defaults.length;i<size;i++) {
 
                     if( defaults[i] in nav ) {
                         client[ defaults[i] ] = nav[ defaults[i] ];
@@ -124,12 +123,9 @@ function ErrorLess() {
 }
 
 
-var ErorrLessAPI = function( user_id, error ) {
-
-      var _user_id = user_id;
+var jCatchAPI = function( user_id, error ) {
 
       if( error ) {
-
         log( error );
       }
 
@@ -156,23 +152,15 @@ var ErorrLessAPI = function( user_id, error ) {
 
           if ("withCredentials" in xhr) {
 
-            // Check if the XMLHttpRequest object has a "withCredentials" property.
-            // "withCredentials" only exists on XMLHTTPRequest2 objects.
-            //xhr.open(method, url, true);
             cors = true;
 
-          } else if (typeof XDomainRequest != "undefined") {
+          } else if (typeof XDomainRequest !== "undefined") {
 
-            // Otherwise, check if XDomainRequest.
-            // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
             xhr = new XDomainRequest();
-            //xhr.open(method, url);
 
           } else {
 
-            // Otherwise, CORS is not supported by the browser.
             xhr = null;
-
           }
 
           xhr.onreadystatechange = function() {
@@ -181,7 +169,7 @@ var ErorrLessAPI = function( user_id, error ) {
 
               if( typeof callback === 'function' ) {
 
-                  return callback(this, data); // data is loop - fix that
+                  return callback(this, data); // data is loop - better callback
 
               } else {
                   console.log( callback );
@@ -195,16 +183,16 @@ var ErorrLessAPI = function( user_id, error ) {
 
           if( method === 'POST' ) {
               if( typeof data !== 'string' ) {
-                data = JSON.stringify( {'user': _user_id, 'error': data} );
+                data = JSON.stringify( {'user': user_id, 'error': data} );
               }
           }
           xhr.send( data );
       }
 
   return {
-    log: log,
+    log: log
   };
 
 };
 
-ErrorLess();
+jCatchClient();
