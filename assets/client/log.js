@@ -1,84 +1,57 @@
-function jCatchClient() {
+function jCatchListener() {
 
     var user_id = getUserID(),
+        _domain = window.location.hostname,
+        _token = null,
         _errors = [],
         _mode = null,
-        _api = null;
+        _api = null,
+        _queue = [];
 
     ;(function init() {
 
         if( ! user_id ) {
-          console.log('user id not found');
+          console.log('jCatch ERROR: user id not found');
           return false;
         }
 
-        //window.onerror = trackError;
-
         window.addEventListener('error', function(error) {
-            trackErrorEvent(error);
+            logErrorEvent(error);
         });
 
-        console.log('jCatch is running...');
+        //console.log('jCatch is running...');
 
     })();
 
-    function trackErrorEvent(event) {
+    function logErrorEvent(event) {
 
-      var _err = {
-            eid: getErrorID(),
-            client: getClient(),
+      var client = getClient();
+
+      var error_data = {
+            eid: _errors.length,
             error: {
-              //clientError: event.error, //obj
               url: event.filepath,
               line: event.lineno,
               column: event.colno,
               message: event.message,
               file: event.filename,
               time: new Date().getTime(),
+              client: {
+                userAgent: client.userAgent,
+                cookie: true,
+              }
             },
           };
 
-        track( _err );
-    }
+          console.log( error_data );
 
+          _errors.push(error_data);
 
-    function track( _err ) {
+          if( ! _api ) {
+            _api = new jCatchAPI(user_id, _domain);
+          }
 
-      stockError( _err );
-
-      if( ! _api ) {
-        _api = new jCatchAPI(user_id, _err);
-      } else {
-        _api.log( _err );
-      }
-
-    }
-
-    function trackError( msg, url, line, column, error ) {
-
-        var _err = {
-              eid: getErrorID(),
-              client: getClient(),
-              error: {
-                clientError: error,
-                clientUrl: url,
-                clientLine: line,
-                clientColumn: column,
-                clientMsg: msg,
-              },
-            };
-
-        track( _err );
-    }
-
-
-    function stockError( error ) {
-        _errors.push( error );
-    }
-
-
-    function getErrorID() {
-        return _errors.length;
+          _api.log( error_data );
     }
 
 
@@ -120,79 +93,120 @@ function jCatchClient() {
     return client;
     }
 
+    function jCatchAPI( user_id, domain ) {
+
+          ;(function init() {
+
+              if( ! auth() ) {
+
+                var credentials = {user: user_id, domain: domain};
+
+                ajax(
+                  function setAuth(res) {
+
+                      var _res = JSON.parse(res);
+                      _token = _res.token;
+
+                      var date = new Date();
+                      date.setTime(date.getTime() + (24*60*60*1000));
+                      var expires = 'expires=' + date.toUTCString();
+                      document.cookie = '_jcatch_' + '=' + _token + ';' + expires + ';path=/';
+
+                      if( _queue.length ) {
+                        _queue.forEach( function(_err) {
+                            log( _err );
+                            delete _queue[_err];
+                        } );
+                      }
+
+                  },
+                  credentials,
+                  'http://jcatch.io/api/auth/'
+                );
+
+              }
+
+          })();
+
+
+          function auth() {
+
+            if( _token ) return _token;
+
+            var token = null;
+
+              var cookies = decodeURIComponent(document.cookie).split(';'),
+                  key = '_jcatch_=';
+
+              for(var i=0;i<cookies.length;i++) {
+                var c = cookies[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(key) == 0) {
+                    token = c.substring(key.length, c.length);
+                }
+              }
+
+          return token;
+          }
+
+
+          function log( _err ) {
+
+            if( auth() ) {
+
+              ajax( function(res) {
+
+                  if( res ) {
+                    //console.log( res );
+                  }
+              }, _err);
+
+            } else {
+              _queue.push( _err );
+            }
+
+          }
+
+
+          function ajax(callback, data, url, method) {
+
+              url = url || 'http://jcatch.io/api/log/add/';
+              method = method || 'POST';
+              data = data || null;
+
+              var xhr = new XMLHttpRequest();
+
+              xhr.onreadystatechange = function() {
+
+                if ( this.readyState === 4 && this.status == 200 ) {
+
+                  if( typeof callback === 'function' ) {
+
+                      return callback(this.response);
+                  }
+                }
+              };
+
+              xhr.open(method, url, true);
+              xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+
+              if( method === 'POST' ) {
+                  if( typeof data !== 'string' ) {
+                    data = JSON.stringify( {user: user_id, domain: _domain, error: data.error} );
+                  }
+              }
+              xhr.send( data );
+          }
+
+      return {
+        log: log
+      };
+
+    }
+
 }
 
 
-var jCatchAPI = function( user_id, error ) {
-
-      if( error ) {
-        log( error );
-      }
-
-
-      function log( _err ) {
-
-          ajax( function(res, rest) {
-
-              if( res && rest ) {
-                console.log( rest );
-              }
-          }, _err);
-      }
-
-
-      function ajax(callback, data, url, method) {
-
-          url = url || 'http://jcatch.io/api/log/add/';
-          method = method || 'POST';
-          data = data || null;
-          var cors = null;
-
-          var xhr = new XMLHttpRequest();
-
-          if ("withCredentials" in xhr) {
-
-            cors = true;
-
-          } else if (typeof XDomainRequest !== "undefined") {
-
-            xhr = new XDomainRequest();
-
-          } else {
-
-            xhr = null;
-          }
-
-          xhr.onreadystatechange = function() {
-
-            if ( this.readyState === 4 && this.status == 200 ) {
-
-              if( typeof callback === 'function' ) {
-
-                  return callback(this, data); // data is loop - better callback
-
-              } else {
-                  console.log( callback );
-              }
-
-            }
-          };
-
-          xhr.open(method, url, true);
-          xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-
-          if( method === 'POST' ) {
-              if( typeof data !== 'string' ) {
-                data = JSON.stringify( {'user': user_id, 'error': data} );
-              }
-          }
-          xhr.send( data );
-      }
-
-  return {
-    log: log
-  };
-
-};
-
-jCatchClient();
+jCatchListener();
