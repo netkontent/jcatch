@@ -17,11 +17,12 @@ module.exports = function(root) {
         res.json({ status: 'error', msg: 'No data.' });
       }
 
-      let data = req.body;
+      let posted = req.body,
+          token = null;
 
       let jCatchUserHandler = jModel.user.model('jCatchUser');
 
-      let user = jCatchUserHandler.findOne({domain: data.domain}, function(err, data) { //add user token
+      let user = jCatchUserHandler.findOne({domain: posted.domain}, function(err, data) { //add user token
 
           let crypto = require('crypto');
 
@@ -33,12 +34,14 @@ module.exports = function(root) {
               let token = crypto.createHash('sha256').update( data.api_key ).digest('base64');
 
         // tmp access
-        } else if( data.user == 'demo') {
-
-            let token = crypto.createHash('sha256').update( 'demo' ).digest('base64');
-
         } else {
-            token = null; // TODO
+            // TODO
+        }
+
+        if( posted.user == 'demo') {
+
+            token = crypto.createHash('sha256').update( 'demo' ).digest('base64');
+
         }
 
         res.json({ status: 'success', token: token });
