@@ -22,20 +22,17 @@ module.exports = function(root) {
 
       let jCatchUserHandler = jModel.user.model('jCatchUser');
 
-      let user = jCatchUserHandler.findOne({domain: posted.domain}, function(err, data) { //add user token
+      let user = jCatchUserHandler.findOne({domain: posted.domain}, function(err, data) {
 
-          let crypto = require('crypto');
+          const crypto = require('crypto');
 
           if( err ) {
-              console.log( err );
+              root.log( err );
               return false;
+
           } else if( data && data.api_key ) {
 
               let token = crypto.createHash('sha256').update( data.api_key ).digest('base64');
-
-        // tmp access
-        } else {
-            // TODO
         }
 
         if( posted.user == 'demo') {
