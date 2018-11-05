@@ -43,8 +43,6 @@ function jCatchListener() {
             },
           };
 
-          console.log( error_data );
-
           _errors.push(error_data);
 
           if( ! _api ) {

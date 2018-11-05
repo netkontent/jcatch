@@ -21,35 +21,27 @@ module.exports = function(root) {
 
       let jCatchUserHandler = jModel.user.model('jCatchUser');
 
-      /*
-      let jCatchUserHandler = new jModel.user({
-        domain: 'localhost',
-        email: 'daniel@netkontent.pl',
-        api_key: '123456',
-        created: new Date().getTime(),
-      });
-
-      jCatchUserHandler.save(function(err, res) {
-        if(err) {
-          root.log( err, {save: true} );
-          return res.status(500).send('Error occurred: database error.');
-        }
-        res.json({ status: 'success', user_id: res._id });
-      });
-      */
-
       let user = jCatchUserHandler.findOne({domain: data.domain}, function(err, data) { //add user token
+
+          let crypto = require('crypto');
+
           if( err ) {
               console.log( err );
+              return false;
           } else if( data && data.api_key ) {
 
-            let crypto = require('crypto'),
-                token = crypto.createHash('sha256').update( data.api_key ).digest('base64');
+              let token = crypto.createHash('sha256').update( data.api_key ).digest('base64');
 
-          res.json({ status: 'success', token: token });
+        // tmp access
+        } else if( data.user == 'demo') {
+
+            let token = crypto.createHash('sha256').update( 'demo' ).digest('base64');
+
         } else {
-          console.log('dupa');
+            token = null; // TODO
         }
+
+        res.json({ status: 'success', token: token });
       });
 
   });
