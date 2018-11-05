@@ -11,5 +11,5 @@ Create your account and add your www project.
 Add code below on any page, which you want track for errors.
 
 ```html
-<script id="jcatch" src='http://jcatch.io/client/log.js?u=USER_KEY'></script>
+<script id="jcatch" src='http://jcatch.io/client/log.js?u=demo'></script>
 ```
