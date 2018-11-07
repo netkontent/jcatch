@@ -63,6 +63,6 @@ module.exports = function(root) {
 return {
   connect: connect,
   model: getModel,
-  engine: getEngine(),
+  engine: getEngine,
 }
 }
