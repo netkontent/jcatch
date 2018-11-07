@@ -10,7 +10,6 @@ const root = { _dir: __dirname };
           res.header('Access-Control-Allow-Headers', 'Content-Type');
           next();
       }
-
       root.app.use(allowCrossDomain);
 
       root.app.use(express.static('public')); // make /public -> public root
@@ -28,6 +27,13 @@ const handlebars = require('express3-handlebars').create({
 
 const routes = require('./module/routes.js')(root);
       routes.init(); // as method, maybe we can add other method there
+
+//init db
+const mongoose = require('./module/mongoose.js')(root);
+      root.db = mongoose;
+
+      //init now
+      root.db.connect();
 
 /*
  * TODO move API to separate node build

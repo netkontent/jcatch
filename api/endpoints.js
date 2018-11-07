@@ -1,7 +1,6 @@
 module.exports = function(root) {
 
   const bodyParser = require('body-parser');
-  const jModel = require('./model.js');
 
   root.app.use(bodyParser.urlencoded({extended: false}));
   root.app.use(bodyParser.json());
@@ -18,9 +17,10 @@ module.exports = function(root) {
       }
 
       let posted = req.body,
-          token = null;
+          token = null,
+          User = root.db.model('user');
 
-      let jCatchUserHandler = jModel.user.model('jCatchUser');
+      let jCatchUserHandler = User.model('jCatchUser');
 
       let user = jCatchUserHandler.findOne({domain: posted.domain}, function(err, data) {
 
@@ -53,9 +53,10 @@ module.exports = function(root) {
       res.json({ status: 'error', msg: 'No data.' });
     }
 
-    let data = req.body;
+    let data = req.body,
+        Log = root.db.model('log');
 
-    let jCatchModelHandler = new jModel.log({
+    let jCatchModelHandler = new Log({
       user_id: data.user,
       domain: data.domain,
       type: 'error', // data.error.type,

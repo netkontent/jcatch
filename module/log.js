@@ -9,7 +9,7 @@ module.exports = function( obj, flag, opts ) {
         saveTo: path.join(__dirname, '../', 'logs/' + _getDate('Y-m-d') + '-node_log' ),
       };
 
-  Object.assign(defaults, opts);
+  opts = Object.assign({}, defaults, opts);
 
   let _result = obj,
       _flag = '';
