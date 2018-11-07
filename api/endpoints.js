@@ -18,7 +18,7 @@ module.exports = function(root) {
 
       let posted = req.body,
           token = null,
-          User = root.db.model('user');
+          User = root.db.use('user');
 
       let jCatchUserHandler = User.model('jCatchUser');
 
@@ -54,7 +54,7 @@ module.exports = function(root) {
     }
 
     let data = req.body,
-        Log = root.db.model('log');
+        Log = root.db.use('log');
 
     let jCatchModelHandler = new Log({
       user_id: data.user,

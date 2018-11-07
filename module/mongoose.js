@@ -37,7 +37,7 @@ module.exports = function(root) {
 
   }
 
-  function getModel(hook) {
+  function useModel(hook) {
 
       return _model(hook);
   }
@@ -62,7 +62,7 @@ module.exports = function(root) {
 
 return {
   connect: connect,
-  model: getModel,
+  use: useModel,
   engine: getEngine,
 }
 }
