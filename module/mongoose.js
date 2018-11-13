@@ -1,32 +1,35 @@
 module.exports = function(root) {
 
   const mongoose = require('mongoose');
-  let reconnects = 0;
+  let models = {};
 
-  function connect() {
+  function connect(db_name, port = '27017') {
+
+      let reconnects = 5,
+          reconnect_delay = 1000;
 
       mongoose
-        .connect('mongodb://mongo:27017/jcatch', { useNewUrlParser: true })
+        .connect(`mongodb://mongo:${port}/${db_name}`, { useNewUrlParser: true })
         .then(() => {
-            root.log('MongoDB connected.');
+            root.log(`DB ${db_name} connected.`);
         })
         .catch(err => {
-            root.log(`MongoDB initial connection error: ${err}`);
+            root.log(`DB ${db_name} connection error: ${err}`);
         });
 
       mongoose.connection.on('error', err => {
-        root.log(`MongoDB reconnect: #${reconnects} connection error: ${err}`)
-        if( reconnects < 5 ) {
-          setTimeout(retryConnection, reconnects*1000);
+        root.log(`DB ${db_name} reconnect: #${reconnects} connection error: ${err}`);
+        if( reconnects ) {
+          setTimeout(retryConnection, reconnect_delay);
         }else {
-          root.log('Connection do mongodb failed. Stoped permanetly.');
+          root.log(`Connection to DB ${db_name} failed. Stoped permanetly.`);
         }
-      })
+      });
 
       let retryConnection = function() {
-        reconnects++;
-        return mongoose.connect('mongodb://mongo:27017/jcatch', { useNewUrlParser: true });
-      }
+        reconnects--;
+        return mongoose.connect(`mongodb://mongo:${port}/${db_name}`, { useNewUrlParser: true });
+      };
 
   return mongoose;
   }
@@ -34,19 +37,22 @@ module.exports = function(root) {
   function getEngine() {
 
     return mongoose;
-
   }
 
-  function useModel(hook) {
+  function use(hook) {
 
-      return _model(hook);
+      if( ! (hook in models) ) {
+        models[hook] = _model(hook);
+      }
+
+      return models[hook];
   }
 
   // model autoloader
   function _model( model_name ) {
 
     const fs = require('fs');
-    let model_path = root._dir + '/model/';
+    let model_path = root._dirname + '/model/';
 
     if( fs.existsSync( model_path + model_name + '.js' ) ) {
 
@@ -60,9 +66,9 @@ module.exports = function(root) {
   return false;
   }
 
-return {
-  connect: connect,
-  use: useModel,
-  engine: getEngine,
-}
-}
+  return {
+    connect: connect,
+    use: use,
+    engine: getEngine,
+  };
+};

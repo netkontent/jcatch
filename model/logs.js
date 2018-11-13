@@ -1,6 +1,6 @@
 module.exports = function(root) {
 
-  let jCatchLogSchema = root.db.engine.Schema({
+  let jCatchLogSchema = root.db.engine().Schema({
     user_id: String,
     domain: String,
     type: String,
@@ -17,7 +17,7 @@ module.exports = function(root) {
     added:  { type: Date, default: Date.now },
   });
 
-  const jCatchLogModel = root.db.engine.model('jCatchLog', jCatchLogSchema);
+  const jCatchLogModel = root.db.engine().model('logs', jCatchLogSchema);
 
   return jCatchLogModel;
 

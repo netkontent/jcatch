@@ -1,45 +1,47 @@
-const express = require('express');
-const root = { _dir: __dirname };
+const root = { _dirname: __dirname };
 
+      // include logger
       root.log = require('./module/log.js');
+
+      // init express
+      const express = require('express');
       root.app = express();
 
-      let allowCrossDomain = function(req, res, next) {
-          res.header('Access-Control-Allow-Origin', "*");
-          res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-          res.header('Access-Control-Allow-Headers', 'Content-Type');
-          next();
-      }
-      root.app.use(allowCrossDomain);
+      // set public folder
+      root.app.use(express.static('public'));
 
-      root.app.use(express.static('public')); // make /public -> public root
+//VIEWS
+      const viewConfig = require('./config/view.cfg.js')(root);
 
-const handlebars = require('express3-handlebars').create({
-            defaultLayout: 'main',
-            helpers: {
-              static: function(name) {
-                return require('./lib/static.js').map(name);
-              }
-            }
-      });
-      root.app.engine('handlebars', handlebars.engine);
-      root.app.set('view engine', 'handlebars');
 
-const routes = require('./module/routes.js')(root);
-      routes.init(); // as method, maybe we can add other method there
+      //ajax
+      const ajax = require('./module/ajax.js')(root);
+      ajax.init();
+// ROUTES
+      const routes = require('./module/routes.js')(root);
+      routes.init();
 
-//init db
-const mongoose = require('./module/mongoose.js')(root);
-      root.db = mongoose;
+
+
+//DB
+      const db = require('./module/mongoose.js')(root);
+      root.db = db;
 
       //init now
-      root.db.connect();
-
-/*
- * TODO move API to separate node build
- */
-root.app.use('/api', require('cors')());
-const api = require('./api/endpoints.js')(root);
+      //root.db.connect('jcatch');
 
 
+
+//API
+      let apiConfig = require('./config/api.cfg.js')(root);
+
+          apiConfig.setMethods(['GET', 'POST']);
+          apiCors = require('cors')( apiConfig.getCors() );
+
+      root.app.use('/api', apiCors);
+
+      const api = require('./api/endpoints.js')(root);
+
+
+// run app
 root.app.listen('3000');

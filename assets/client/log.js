@@ -6,12 +6,16 @@ function jCatchListener() {
         _errors = [],
         _mode = null,
         _api = null,
+        _endpoints = {
+            log:  'http://jcatch.io/api/log/add/',
+            auth: 'http://jcatch.io/api/auth/',
+        },
         _queue = [];
 
     ;(function init() {
 
         if( ! user_id ) {
-          console.log('jCatch ERROR: user id not found');
+          console.log('jCatch ERROR: user id not set');
           return false;
         }
 
@@ -45,8 +49,9 @@ function jCatchListener() {
 
           _errors.push(error_data);
 
-          if( ! _api ) {
-            _api = new jCatchAPI(user_id, _domain);
+          if( ! _api ) { console.log(_endpoints.auth);
+            var credentials = {user: user_id, domain: _domain};
+            _api = new jCatchAPI(credentials);
           }
 
           _api.log( error_data );
@@ -55,8 +60,16 @@ function jCatchListener() {
 
     function getUserID() {
 
-      var script_src = document.getElementById('jcatch').src,
-          user_id = decodeURIComponent(script_src.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent('u').replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+      var scripts = document.querySelectorAll('script[src]'),
+          user_id=null;
+
+          for(var i=0;i<scripts.length;i++) {
+              if(scripts[0].src.indexOf('jcatch.io') !== -1 ) {
+                var script_src = scripts[0].src;
+                user_id = decodeURIComponent(script_src.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent('u').replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+                break;
+              }
+          }
 
     return user_id;
     }
@@ -91,15 +104,11 @@ function jCatchListener() {
     return client;
     }
 
-    function jCatchAPI( user_id, domain ) {
+    function jCatchAPI( credentials ) {
 
-          ;(function init() {
+          ;(function __init() {
 
-              if( ! auth() ) {
-
-                var credentials = {user: user_id, domain: domain};
-
-                ajax(
+                _ajax(
                   function setAuth(res) {
 
                       var _res = JSON.parse(res);
@@ -119,19 +128,15 @@ function jCatchListener() {
 
                   },
                   credentials,
-                  'http://jcatch.io/api/auth/'
+                  _endpoints.auth
                 );
-
-              }
 
           })();
 
 
           function auth() {
 
-            if( _token ) return _token;
-
-            var token = null;
+              var token = null;
 
               var cookies = decodeURIComponent(document.cookie).split(';'),
                   key = '_jcatch_=';
@@ -152,13 +157,13 @@ function jCatchListener() {
 
           function log( _err ) {
 
-            if( auth() ) {
+            var token = auth();
 
-              ajax( function(res) {
+            if( token ) {
 
-                  if( res ) {
-                    //console.log( res );
-                  }
+              _ajax( function(res) {
+
+                  console.log( res );
               }, _err);
 
             } else {
@@ -168,9 +173,9 @@ function jCatchListener() {
           }
 
 
-          function ajax(callback, data, url, method) {
+          function _ajax(callback, data, url, method) {
 
-              url = url || 'http://jcatch.io/api/log/add/';
+              url = url || _endpoints.log;
               method = method || 'POST';
               data = data || null;
 
@@ -180,10 +185,7 @@ function jCatchListener() {
 
                 if ( this.readyState === 4 && this.status == 200 ) {
 
-                  if( typeof callback === 'function' ) {
-
-                      return callback(this.response);
-                  }
+                  return callback(this.response);
                 }
               };
 

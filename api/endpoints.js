@@ -1,6 +1,7 @@
 module.exports = function(root) {
 
   const bodyParser = require('body-parser');
+  const crypto = require('crypto');
 
   root.app.use(bodyParser.urlencoded({extended: false}));
   root.app.use(bodyParser.json());
@@ -20,28 +21,42 @@ module.exports = function(root) {
           token = null,
           User = root.db.use('user');
 
-      let jCatchUserHandler = User.model('jCatchUser');
+      let jCatchUserHandler = User.model('user');
 
-      let user = jCatchUserHandler.findOne({domain: posted.domain}, function(err, data) {
-
-          const crypto = require('crypto');
+      let user = jCatchUserHandler.findOne({_id: posted.user}, function(err, user_data) {
 
           if( err ) {
-              root.log( err );
+              root.log( err, {save: true} );
               return false;
+          }
 
-          } else if( data && data.api_key ) {
 
-              let token = crypto.createHash('sha256').update( data.api_key ).digest('base64');
-        }
+          if( user_data && user_data.api_key ) {
 
-        if( posted.user == 'demo') {
+              token = crypto.createHash('sha256').update( user_data.api_key ).digest('base64');
 
-            token = crypto.createHash('sha256').update( 'demo' ).digest('base64');
+          } else if( posted.user == 'demo') {
 
-        }
+              token = crypto.createHash('sha256').update( 'demo' ).digest('base64');
+          }
 
-        res.json({ status: 'success', token: token });
+          if( token ) {
+
+            jCatchUserHandler.updateOne({_id: user_data._id}, {token: token}, {upsert: true}, function(err) {
+
+              if(err) {
+                root.log( err, {save: true} );
+                return res.status(500).send('Error occurred: Token cannot be set.');
+              }
+
+              res.json({ status: 'success', token: token });
+
+            });
+
+          } else {
+              res.json({ status: 'error', msg: 'Token is not set.' });
+          }
+
       });
 
   });
@@ -54,9 +69,10 @@ module.exports = function(root) {
     }
 
     let data = req.body,
-        Log = root.db.use('log');
+        Log = root.db.use('logs'),
+        User = root.db.use('users');
 
-    let jCatchModelHandler = new Log({
+    let jCatchLogHandler = new Log({
       user_id: data.user,
       domain: data.domain,
       type: 'error', // data.error.type,
@@ -74,12 +90,22 @@ module.exports = function(root) {
     });
 
 
-    jCatchModelHandler.save(function(err, data) {
-      if(err) {
-        root.log( err, {save: true} );
-        return res.status(500).send('Error occurred: database error.');
-      }
-      res.json({ status: 'success', id: data._id });
+    User.findOne({token: data.token}, function(err, user) {
+
+        if( err ) {
+          root.log( err, {save: true} );
+          return res.status(500).send('Error occurred: user token not found.');
+        }
+
+        //user token is valid, now we can save
+        jCatchLogHandler.save(function(err, data) {
+          if(err) {
+            root.log( err, {save: true} );
+            return res.status(500).send('Error occurred: database error.');
+          }
+          res.json({ status: 'success', id: data._id });
+        });
+
     });
 
   });

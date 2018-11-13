@@ -2,10 +2,125 @@
 <html>
   <head>
     <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:600i" rel="stylesheet">
-    <link rel="stylesheet" href="/css/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+
   </head>
   <body>
-    {{{body}}}
+    <header>
+        <div class="row">
+          <div class="col col-2">
+              <h1 class="logo"><a href="/" title="jCatch.io - Home"><span class="bl">jCatch.io</span></a></h1>
+          </div>
+          <div class="col col-2">
+              <nav id="top-nav" data-group="topnav">
+                  <ul class="menu">
+                      <li class="modal-login"><a href="#login" class="btn small blue rcut" data-popik="#login" title="Login to Dashboard">Login</a></li>
+                      <li class="modal-register"><a href="#register" class="btn small blue lcut" data-popik="#register" title="Register new accout">Register</a></li>
+                  </ul>
+              </nav>
+          </div>
+        </div>
+    </header>
+    <section class="wide">
+      <article class="top">
+          <p>javascript errors in cloud</p>
+      </article>
+    </section>
+    <section id="main">
+        {{{body}}}
+    </section>
+    <footer id="footer">
+        <div class="row">
+            <div class="col col-3">
+                <div class="block">
+                    <h4>jCatch.io</h4>
+                    <nav>
+                        <ul class="menu-v">
+                            <li><a href="/about">About</a></li>
+                            <li><a href="/about">Contact us</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col col-3">
+                <div class="block">
+                  <h4>Developers</h4>
+                  <nav>
+                      <ul class="menu-v">
+                          <li><a href="/documentation">Documentation</a></li>
+                          <li><a href="/api-docs">API</a></li>
+                          <li><a href="/integration">Integration</a></li>
+                          <li><a href="/help">Help</a></li>
+                      </ul>
+                  </nav>
+                </div>
+            </div>
+            <div class="col col-3">
+               <div class="block">Quisque hendrerit mauris nibh, eget interdum lorem pellentesque quis. Nullam vitae malesuada nisl. Pellentesque elementum sem eget aliquet egestas.</div>
+            </div>
+        </div>
+        <div class="foot">
+            <nav>
+                <ul class="menu">
+                  <li><a href="/about">Cookies</a></li>
+                  <li><a href="/about">Terms and conditions</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="/js/plugins.js"></script>
+  <script src="/js/main.js"></script>
+  <script id="login" type="text/html">
+      <div class="form-wrap">
+          <form id="login-form" data-form="login" class="cute">
+            <div class="form-row">
+              <label for="login-email">
+                  <span>Email:</span>
+                  <input id="login-email" name="email" type="email" required />
+              </label>
+            </div>
+            <div class="form-row">
+              <label for="login-pass">
+                  <span>Password:</span>
+                  <input id="login-pass" name="pass" type="password" required/>
+              </label>
+            </div>
+            <div class="form-row right">
+              <input type="submit" value="Login" class="btn small blue"/>
+            </div>
+          </form>
+      </div>
+  </script>
+  <script id="register" type="text/html">
+      <div class="form-wrap">
+          <form id="login-form" data-form="register" class="cute">
+            <div class="form-row">
+              <label for="register-email">
+                  <span>Email:</span>
+                  <input id="register-email" name="email" type="email" required />
+              </label>
+            </div>
+            <div class="form-row">
+              <label for="register-pass">
+                  <span>Password:</span>
+                  <input id="register-pass" name="pass" type="password" required/>
+              </label>
+            </div>
+            <div class="form-row">
+              <label for="register-repass">
+                  <span>Retype password:</span>
+                  <input id="register-repass" name="repass" type="password" required/>
+              </label>
+            </div>
+            <div class="form-row right">
+              <input type="submit" value="Register" class="btn small blue"/>
+            </div>
+          </form>
+      </div>
+  </script>
   </body>
 </html>

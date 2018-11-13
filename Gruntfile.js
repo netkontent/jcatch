@@ -13,7 +13,8 @@ module.exports = function(grunt) {
           //sourceMapName: 'public/admin/admin.map'
         },
         files: {
-          'public/client/log.js': ['assets/client/log.js']
+          'public/client/log.js': ['assets/client/log.js'],
+          'public/js/main.js': ['assets/main.js']
         }
       }
     },
