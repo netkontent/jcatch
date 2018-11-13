@@ -62,6 +62,7 @@ typings/
 
 # elm ignores
 build
+elm-stuff
 
 # golang ignores
 bin
