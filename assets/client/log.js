@@ -65,8 +65,7 @@ try { (function jCatchListener() {
               for(var i=0;i<scripts.length;i++) {
 
                   if(
-                      typeof scripts[0].src !== 'undefined'
-                      && scripts[0].src.indexOf('jcatch.io') !== -1
+                      typeof scripts[0].src !== 'undefined' && scripts[0].src.indexOf('jcatch.io') !== -1
                   ) {
                     var script_src = scripts[0].src;
                     user_id = decodeURIComponent(script_src.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent('u').replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
@@ -206,7 +205,7 @@ try { (function jCatchListener() {
   })();
 
 }
-catch {
+catch(e) {
   console.warn('jCatch is not running.');
   console.error(e);
 }
