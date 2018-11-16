@@ -28,7 +28,7 @@ const root = { _dirname: __dirname };
       root.db = db;
 
       //init now
-      root.db.connect('jcatch');
+      //root.db.connect('jcatch');
 
 
 

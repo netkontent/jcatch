@@ -2,9 +2,6 @@
 
   $.fn.popik = function() {
 
-      var stack = [],
-          top=99;
-
       return this.each( function() {
 
           var popik = {},
@@ -21,22 +18,24 @@
                 group = hook.closest('*[data-group]'),
                 wrap = group.length ? group : 'body';
 
-            group.find('.popik').remove();
-
-            if( hook.data('popik_id') && $('#popik-' + hook.data('popik_id')).length ) {
-                destroy( hook.data('popik_id') );
-                hook.attr('data-popik_id', null);
+            if(
+                typeof hook.attr('data-popik_id') !== 'undefined' // clicked
+                && $('#popik-'+hook.attr('data-popik_id')).length // opened
+              ) {
+                destroy( hook.attr('data-popik_id') );
                 return false;
+            } else {
+                group.find('*[data-popik_id]').each( function() {
+                    destroy( $(this).attr('data-popik_id') );
+                });
             }
-
-
 
             var pos = getPosition(),
                 _width = $(window).width() < 480 ? 'calc(100% - 30px)' : width + 'px';
                 popik = $('<div>', {
                   id: 'popik-' + ix,
                   class: 'popik',
-                  style: 'z-index:'+top+';position:absolute;top:'+pos.y+'px;left:'+pos.x+'px;width:'+_width+';background:white;padding:10px 20px;border:solid 1 px;box-shadow: 0px 0 5px 3px rgba(0,0,0,0.45);',
+                  style: 'z-index:99;position:absolute;top:'+pos.y+'px;left:'+pos.x+'px;width:'+_width+';background:white;padding:10px 20px;border:solid 1 px;box-shadow: 0px 0 5px 3px rgba(0,0,0,0.45);',
                   html: getContent(),
                   click: function(c) {
                     c.preventDefault();
@@ -47,7 +46,7 @@
                 var close_btn = $('<a>', {
                       href: 'close-'+ix,
                       html: 'x',
-                      style: 'padding:2px;text-decoration:none;position:relative;top:-10px;right:-10px;float:right;font-weight:bold;color:red;',
+                      style: 'padding:2px;text-decoration:none;position:relative;top:-10px;right:-15px;float:right;font-weight:bold;color:red;',
                       click: function(c) {
                           c.preventDefault();
                           var id = $(this).attr('href').split('-')[1];
@@ -55,22 +54,14 @@
                       }
                     });
 
-                var _el = {};
-                    _el[ix] = popik;
-
-
-
-                stack.push( _el );
                 popik.prepend(close_btn).appendTo( wrap );
                 hook.attr('data-popik_id', ix);
-                top++;
           });
 
 
           function destroy(x) {
-
             $('#popik-' + x).remove();
-            stack.splice(x-1,1);
+            $('*[data-popik_id="'+x+'"]').attr('data-popik_id', null);
           }
 
 
@@ -120,7 +111,7 @@
 
 
           function getIndex() {
-              return stack.length+1;
+              return $('body').find('.popik').length;
           }
 
       } );
