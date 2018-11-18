@@ -1,7 +1,6 @@
 module.exports = async function(root, posted) {
 
-
-  let validate = validateForm( posted );
+  let validate = validateForm( posted.body );
 
   if( ! validate.status || validate.status === 'invalid' ) {
       return validate;
@@ -25,7 +24,7 @@ module.exports = async function(root, posted) {
 
 
   const User = root.db.use('users');
-  let result = await User.save( posted.email, posted.pass );
+  let result = await User.save( posted.body.email, posted.body.pass );
 
 return result;
 }

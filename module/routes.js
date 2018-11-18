@@ -4,9 +4,22 @@ module.exports = function(root) {
 
   function init() {
 
-    /* ##### START: ROUTES ##### */
+    //asign loged user to view
+    root.app.use(function(req, res, next) {
+
+        if( req.isAuthenticated() ) {
+          res.locals.user = req.user;
+        }
+
+        next();
+    });
+
+    /* ###  ## START: ROUTES ##### */
     root.app.get('/', _controller('home') );
     root.app.get('/test', _controller('test') );
+    root.app.get('/secret', _controller('secret') );
+
+    root.app.get('/logout', (req, res) => { req.logout(); res.redirect('/') } );
 
     // ignore /api/* 404 - as last
     root.app.use(/^\/(?!api|ajax).*/, (req, res) => {

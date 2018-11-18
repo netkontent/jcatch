@@ -2,7 +2,7 @@
 
     $('*[data-popik]').popik();
 
-    $('document').ready( function() {
+    $(document).ready( function() {
 
         $(document).on('submit', 'form[data-form]', function(s) {
 
@@ -33,11 +33,7 @@
 
                     if( res.status === 'success' ) {
 
-                        msg.html( 'Your account has been created.' );
-                        form.find('.form_body').slideUp('fast');
-
-                        var code = $('<div>', {class: 'code', html: res.script});
-                            code.appendTo( form );
+                        form.resolve( res );
 
                     } else if( res.status === 'invalid' ){
 

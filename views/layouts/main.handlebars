@@ -15,11 +15,19 @@
               <h1 class="logo"><a href="/" title="jCatch.io - Home"><span class="bl">jCatch.io</span></a></h1>
           </div>
           <div class="col col-2">
+
               <nav id="top-nav" data-group="topnav">
+                  {{#if user}}
+                  <ul class="menu">
+                      <li><a href="/profile" class="btn small green rcut" title="Your profile">Profile</a></li>
+                      <li><a href="/logout" class="btn small red lcut" title="Logout">Logout</a></li>
+                  </ul>
+                  {{else}}
                   <ul class="menu">
                       <li class="modal-login"><a href="#login" class="btn small blue rcut" data-popik="#login" title="Login to Dashboard">Login</a></li>
                       <li class="modal-register"><a href="#register" class="btn small blue lcut" data-popik="#register" title="Register new accout">Register</a></li>
                   </ul>
+                  {{/if}}
               </nav>
           </div>
         </div>
@@ -77,20 +85,23 @@
   <script id="login" type="text/html">
       <div class="form-wrap">
           <form id="login-form" data-form="login" class="cute">
-            <div class="form-row">
-              <label for="login-email">
-                  <span>Email:</span>
-                  <input id="login-email" name="email" type="email" required />
-              </label>
-            </div>
-            <div class="form-row">
-              <label for="login-pass">
-                  <span>Password:</span>
-                  <input id="login-pass" name="pass" type="password" required/>
-              </label>
-            </div>
-            <div class="form-row right">
-              <input type="submit" value="Login" class="btn small blue"/>
+            <div class="response-msg"></div>
+            <div class="form-body">
+              <div class="form-row">
+                <label for="login-email">
+                    <span>Email:</span>
+                    <input id="login-email" name="email" type="email" required />
+                </label>
+              </div>
+              <div class="form-row">
+                <label for="login-pass">
+                    <span>Password:</span>
+                    <input id="login-pass" name="pass" type="password" required/>
+                </label>
+              </div>
+              <div class="form-row right">
+                <input type="submit" value="Login" class="btn small blue"/>
+              </div>
             </div>
           </form>
       </div>
@@ -98,6 +109,7 @@
   <script id="register" type="text/html">
       <div class="form-wrap">
           <form id="login-form" data-form="register" class="cute">
+            <div class="response-msg"></div>
             <div class="form-row">
               <label for="register-email">
                   <span>Email:</span>

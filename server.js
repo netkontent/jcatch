@@ -7,28 +7,40 @@ const root = { _dirname: __dirname };
       const express = require('express');
       root.app = express();
 
-      // set public folder
-      root.app.use(express.static('public'));
+
+
+            // set public folder
+            root.app.use(express.static('public'));
+
 
 //VIEWS
       const viewConfig = require('./config/view.cfg.js')(root);
 
+      //DB
+            const db = require('./module/mongoose.js')(root);
+            root.db = db;
 
-      //ajax
-      const ajax = require('./module/ajax.js')(root);
-      ajax.init();
+            //init now
+            root.db.connect('jcatch');
+
+      //SESSIONS
+            const auth = require('./module/auth.js')(root);
+            root.passport = auth.passport();
+
 // ROUTES
       const routes = require('./module/routes.js')(root);
       routes.init();
 
 
 
-//DB
-      const db = require('./module/mongoose.js')(root);
-      root.db = db;
 
-      //init now
-      root.db.connect('jcatch');
+
+
+
+
+      //ajax
+      const ajax = require('./module/ajax.js')(root);
+      ajax.init();
 
 
 

@@ -41,9 +41,11 @@ div { box-sizing: border-box; }
 
 #main {  }
   #intro { margin-top: 35px; }
-  #try { margin-top: 20px; padding: 15px 25px 0 15px; background: rgba(0, 20, 255, .1); border-radius: 15px; }
-    .block h2 {}
+  #try { margin-top: 20px; padding: 15px 25px 0 15px; background: rgba(0, 20, 255, .2); border-radius: 15px; }
+    .block h2 { margin-top:10px; }
     .block p { font-size: 16px; line-height: 22px; }
+    form#try-now {}
+      #try-now input[type=checkbox] { transform: scale(1.3); }
 
   #about { padding-top: 35px; }
   #support { margin-top: 100px; text-align: center; }
@@ -93,7 +95,7 @@ form { display: inline-block; position: relative; padding: 0; overflow: hidden; 
       .clasic label { display: inline-block; min-width: 100px;margin-bottom: 10px; font-size: 18px; }
       .clasic input.large { display: inline-block; width: calc(100% - 120px); font-size: 20px; padding: 5px; }
       .clasic select.large { font-size: 20px; padding: 5px; }
-      .tc { padding-left: 100px;  }
+      .tc { padding-left: 107px;  }
         .tc label { min-width: 0;  }
           .tc label span, .tc a { font-size: 18px!important; }
       .submit.wrap { position: relative; max-width: 275px; width: 100%; display: inline-block; }
@@ -114,11 +116,17 @@ form { display: inline-block; position: relative; padding: 0; overflow: hidden; 
 
 
     .rcut  {
+      border-top-left-radius: 3px!important;
+      border-bottom-left-radius: 3px!important;
+      padding-right: 17px!important;
       -webkit-clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
       clip-path: polygon(0 0, 100% 0, 87.5% 100%, 0% 100%);
     }
 
     .lcut  {
+      border-top-right-radius: 3px!important;
+      border-bottom-right-radius: 3px!important;
+      padding-left: 17px!important;
       -webkit-clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
       clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
     }

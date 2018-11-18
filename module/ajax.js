@@ -7,38 +7,37 @@ module.exports = function(root) {
   function init() {
 
     /* ##### START: AJAX ##### */
+    //root.app.post('/ajax/login/', jsonParser, actionLoader );
+
     root.app.post('/ajax/:action/', jsonParser, actionLoader);
+    root.app.get('/ajax/:action/', actionLoader);
 
     return root;
     /* ##### END: AJAX ##### */
 
   }
 
-  // ajax controller autoloader
+  // ajax controller autoloaderSW
+  function actionLoader(req, res, next) {
 
-  async function actionLoader(req, res) {
-
-
-      let posted = req.body,
-          action = req.params.action,
+      let action = req.params.action || null,
+          req_data = getRequestData( req ),
           ajax_path = root._dirname + '/controller/ajax/';
 
-      if( ! posted ) {
-        res.json({ status: 'error', msg: 'No posted data.' });
+      if( ! req_data ) {
+        res.json({ status: 'error', msg: 'No posted data set.' });
         return false;
       }
 
       if( ! action ) {
-        res.json({ status: 'error', msg: 'No action.' });
+        res.json({ status: 'error', msg: 'No action set.' });
         return false;
       }
 
 
       if( fs.existsSync( ajax_path + action + '.js' ) ) {
 
-        $res = await require( ajax_path + action + '.js' )(root, posted);
-        
-        res.json( $res );
+        return require( ajax_path + action + '.js' )(root, req_data, req, res, next);
 
       } else {
 
@@ -47,6 +46,28 @@ module.exports = function(root) {
         return false;
       }
   };
+
+
+  function getRequestData( req ) {
+
+      let data = null;
+
+      switch( req.method ) {
+          case 'POST':
+
+              data = req || null;
+
+              break;
+
+          case 'GET':
+
+              data = req.params || null;
+
+              break;
+      }
+
+  return data;
+  }
 
 
   return {

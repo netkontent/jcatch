@@ -24,7 +24,7 @@ module.exports = function(root) {
 
     function setOrigin( origin = '' ) {
 
-      cors.origin = origine;
+      cors.origin = origin;
     }
 
 

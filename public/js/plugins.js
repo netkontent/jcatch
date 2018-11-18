@@ -1,5 +1,27 @@
 ;(function($) {
 
+  $.fn.resolve = function(res) {
+
+      var form = this;
+
+      switch( form.data('form') ) {
+
+          case 'try':
+              msg.html( res.msg );
+              form.find('.form_body').slideUp('fast');
+
+              var code = $('<div>', {class: 'code', html: res.script});
+              code.appendTo( form );
+          break;
+
+          case 'login':
+              location.reload(); //TODO dynamic
+          break;
+
+      }
+
+  }
+
   $.fn.popik = function() {
 
       return this.each( function() {
@@ -36,12 +58,10 @@
                   id: 'popik-' + ix,
                   class: 'popik',
                   style: 'z-index:99;position:absolute;top:'+pos.y+'px;left:'+pos.x+'px;width:'+_width+';background:white;padding:10px 20px;border:solid 1 px;box-shadow: 0px 0 5px 3px rgba(0,0,0,0.45);',
-                  html: getContent(),
                   click: function(c) {
-                    c.preventDefault();
                     $(this).css('z-index', top+1);
                   }
-                });
+                }).prepend( getContent() );
 
                 var close_btn = $('<a>', {
                       href: 'close-'+ix,
@@ -105,8 +125,7 @@
                       }
                   }
 
-            return 'Content not found';
-
+          return 'Content not found';
           }
 
 
@@ -123,8 +142,7 @@
       var el = this;
 
       el.find('.form-row').not('.last').css({opacity: 1});
-      el.find('.submit.wrap .submit').css({opacity: 1});
-      el.find('.submit.wrap .wrapik').remove();
+      el.find('.submit.wrap .submit').css({opacity: 1}).val( el.find('.submit.wrap .submit').data('val') );
       el.find('.block').remove();
   }
 
@@ -137,41 +155,14 @@
           el = this,
           int = 0;
 
-          var wrap = $('<div/>', {class: 'block', style: 'position:absolute;width:100%;height:100%;z-index:9;top:0;left:0;background:transpatent;'}),
-              wrapik = $('<div/>', {class: 'wrapik', style: 'position:absolute;width:100%;height:100%;z-index:9;top:0;left:0;background:transpatent;text-align:center;line-height:20px;font-size: 30px;'});
+          var wrap = $('<div/>', {class: 'block', style: 'position:absolute;width:100%;height:100%;z-index:9;top:0;left:0;background:transpatent;cursor:wait'}),
+              submit_button = el.find('input[type=submit]');
 
+              el.css({position: 'relative'});
               wrap.appendTo( el );
-              wrapik.appendTo( el.find('.submit.wrap') );
 
-              loadingText();
-              el.find('.form-row').not('.last').css({opacity: .35});
-              el.find('.submit.wrap .submit').css({opacity: .35});
-
-              function loadingText() {
-
-                  var msg = '';
-
-                  setTimeout(function() {
-
-                    if(int===0) { msg = '.' }
-                    if(int===1) { msg = '..'; }
-                    if(int===2) { msg = '...'; }
-                    if(int===3) { msg = ''; }
-
-                    wrapik.text( msg );
-
-                    int++;
-
-                    if( int > 3 ) {
-                      int=0;
-                    }
-
-                    loadingText();
-
-                  }, 200);
-
-              };
-
+              el.find('.form-body').css({opacity: .45});
+              submit_button.val('Please wait');
   }
 
   $.fn.inViewport = function() {
