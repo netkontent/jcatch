@@ -19,8 +19,6 @@ const root = { _dirname: __dirname };
     //DB
     const db = require('./module/mongoose.js')(root);
     root.db = db;
-
-
     //init now
     root.db.connect('jcatch');
 

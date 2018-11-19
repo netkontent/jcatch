@@ -15,15 +15,24 @@ module.exports = function(root) {
     });
 
     /* ###  ## START: ROUTES ##### */
-    root.app.get('/', _controller('home') );
-    root.app.get('/test', _controller('test') );
-    root.app.get('/secret', _controller('secret') );
 
     root.app.get('/logout', (req, res) => { req.logout(); res.redirect('/') } );
 
+
     // ignore /api/* 404 - as last
     root.app.use(/^\/(?!api|ajax).*/, (req, res) => {
-      res.status('404').send('api - 404');
+
+      let ctrl_path = root._dirname + '/controller' + req.originalUrl;
+
+      if( fs.existsSync( ctrl_path + '.js' ) ) {
+
+        return require( ctrl_path + '.js' )(req, res);
+
+      } else {
+
+        res.status('404').send('api - 404');
+      }
+
     } );
 
     /* ##### END: ROUTES ##### */
@@ -33,18 +42,7 @@ module.exports = function(root) {
   // controller autoloader
   function _controller( ctrl_name ) {
 
-    let ctrl_path = root._dirname + '/controller/';
 
-    if( fs.existsSync( ctrl_path + ctrl_name + '.js' ) ) {
-
-      return require( ctrl_path + ctrl_name + '.js' );
-
-    } else {
-
-      root.log('Controller [' + ctrl_name + '] is defined, but is not found.', 'warning');
-
-      return next();
-    }
 
   }
 
