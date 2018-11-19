@@ -8,6 +8,8 @@ module.exports = function(root) {
   const cookieParser = require('cookie-parser');
   const bodyParser = require('body-parser');
 
+  root.app.use(cookieParser('secret-login-string'));
+  root.app.use(bodyParser.json());
   root.app.use(session({
       secret: 'secret-login-string',
       resave: true,
@@ -26,8 +28,8 @@ module.exports = function(root) {
       User.model('users').findOne({ email: email }, function (err, user) {
 
         if (err) { return done(err); }
-        if (!user) { return done(null, false); }
-        if (!verifyPassword(pass, user.password)) { return done(null, false); }
+        if (!user) { return done(null, false, {message: 'User not found.'}); }
+        if (!verifyPassword(pass, user.password)) { return done(null, false, {message: 'Incorrect password.'}); }
 
         return done(null, user);
       });
@@ -35,16 +37,12 @@ module.exports = function(root) {
   ));
 
   passport.serializeUser(function(user, done) {
-    done(null, user.id);
+      done(null, user);
   });
 
   passport.deserializeUser(function(id, done) {
     User.model('users').findById(id, function (err, user) {
-      done(err, user);
-      root.app.use(function(req, res, next){
-        res.locals.user = id;
-        next();
-      });
+        done(err, user);
     });
   });
 

@@ -2,6 +2,11 @@
 
     $('*[data-popik]').popik();
 
+    $(document).on('dynamicElementCreated', function(e, el) {
+
+        el.find('*[data-popik]').popik();
+    });
+
     $(document).ready( function() {
 
         $(document).on('submit', 'form[data-form]', function(s) {
@@ -39,8 +44,12 @@
 
                         msg.html( getErrorMsg( form, res.invalid ) );
 
-                    }else {
-                      console.log( res.msg );
+                    } else if( res.status === 'error' ) {
+
+                        msg.html( res.message );
+
+                    } else {
+                      console.log( res.message );
                     }
                 });
         });

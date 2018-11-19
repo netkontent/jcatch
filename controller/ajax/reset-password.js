@@ -22,34 +22,6 @@ module.exports = function(root, posted, req, res, next) {
       return validation;
   }
 
+  res.json({status: 'error', message: 'TODO'});
 
-  root.passport.authenticate('login', function(error, user, info) {
-
-      if(error) {
-          res.json({status: 'error', message: error.message});
-          return false;
-      }
-      if( ! user ) {
-          res.json({status: 'error', message: info.message});
-          return false;
-      }
-
-      req.logIn(user, function(err) {
-
-        if (err) {
-          next(err);
-        }
-
-        next();
-
-      });
-
-      res.status(200).json({
-            status: 'success',
-            data: {user: user._id}
-        });
-
-
-
-  })(req, res, next);
 }

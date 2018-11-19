@@ -31,6 +31,7 @@
               trigger = $(this),
               content = getContent();
 
+
           trigger.on('click', function(c) {
 
             c.preventDefault();
@@ -38,7 +39,8 @@
             var hook = $(this),
                 ix = getIndex(),
                 group = hook.closest('*[data-group]'),
-                wrap = group.length ? group : 'body';
+                wrap = group.length ? group : 'body',
+                pos = hook.closest('.popik').length ? hook.closest('.popik').offset() : getPosition();
 
             if(
                 typeof hook.attr('data-popik_id') !== 'undefined' // clicked
@@ -47,20 +49,25 @@
                 destroy( hook.attr('data-popik_id') );
                 return false;
             } else {
+                //find all triggers
                 group.find('*[data-popik_id]').each( function() {
                     destroy( $(this).attr('data-popik_id') );
                 });
+
+                // find all virtuals
+                group.find('.popik').each( function() {
+                    destroy( $(this).attr('id').replace('popik-', '') );
+                } );
             }
 
-            var pos = getPosition(),
-                _width = $(window).width() < 480 ? 'calc(100% - 30px)' : width + 'px';
+            var _width = $(window).width() < 480 ? 'calc(100% - 30px)' : width + 'px';
                 popik = $('<div>', {
                   id: 'popik-' + ix,
                   class: 'popik',
-                  style: 'z-index:99;position:absolute;top:'+pos.y+'px;left:'+pos.x+'px;width:'+_width+';background:white;padding:10px 20px;border:solid 1 px;box-shadow: 0px 0 5px 3px rgba(0,0,0,0.45);',
+                  style: 'z-index:99;position:absolute;top:'+pos.top+'px;left:'+pos.left+'px;width:'+_width+';background:white;padding:10px 20px;border:solid 1 px;box-shadow: 0px 0 5px 3px rgba(0,0,0,0.45);',
                   click: function(c) {
                     $(this).css('z-index', top+1);
-                  }
+                  },
                 }).prepend( getContent() );
 
                 var close_btn = $('<a>', {
@@ -76,6 +83,9 @@
 
                 popik.prepend(close_btn).appendTo( wrap );
                 hook.attr('data-popik_id', ix);
+
+                //fire event
+                $(document).trigger('dynamicElementCreated', [popik]);
           });
 
 
@@ -107,7 +117,7 @@
 
 
 
-          return {x: x, y: y};
+          return {left: x, top: y};
           }
 
 
@@ -139,10 +149,11 @@
 
   $.fn.unblock = function() {
 
-      var el = this;
+      var el = this,
+          submit = el.find('input[type=submit]');
 
-      el.find('.form-row').not('.last').css({opacity: 1});
-      el.find('.submit.wrap .submit').css({opacity: 1}).val( el.find('.submit.wrap .submit').data('val') );
+      el.find('.form-body').css({opacity: 1});
+      submit.val( submit.data('val') );
       el.find('.block').remove();
   }
 
@@ -162,7 +173,7 @@
               wrap.appendTo( el );
 
               el.find('.form-body').css({opacity: .45});
-              submit_button.val('Please wait');
+              submit_button.attr('data-val', submit_button.val()).val('Please wait');
   }
 
   $.fn.inViewport = function() {

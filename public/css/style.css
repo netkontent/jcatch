@@ -8,13 +8,14 @@ img { max-width: 100%; }
 
 .center { text-align: center; }
 .clear:after { display: table; content: ''; clear: both; float: none; }
+.right { text-align: right; }
 
 .row {}
   .row .col:first-child { margin-left:0!important; }
  .row:after { display: table; clear: both; content: ''; float:none; }
 .col { float: left; }
-.col-2 { width:calc(50% - 40px); margin-left: 75px;}
-.col-3 { width:calc(33% - 25px); margin-left: 25px;}
+.col-2 { width: calc(50% - 10px); margin-left: 20px;}
+.col-3 { width: calc(33% - 25px); margin-left: 25px;}
 
 header { border-bottom: solid 1px lightgrey; padding-left: 5px; }
 div { box-sizing: border-box; }
@@ -41,6 +42,7 @@ div { box-sizing: border-box; }
 
 #main {  }
   #intro { margin-top: 35px; }
+    #intro .col-2 { width: calc(50% - 40px); margin-left: 75px; }
   #try { margin-top: 20px; padding: 15px 25px 0 15px; background: rgba(0, 20, 255, .2); border-radius: 15px; }
     .block h2 { margin-top:10px; }
     .block p { font-size: 16px; line-height: 22px; }
@@ -86,7 +88,7 @@ form { display: inline-block; position: relative; padding: 0; overflow: hidden; 
   fieldset { border:0; }
   .form.wrap {}
   .form-row { margin: 20px 0; }
-   .form-row.right { text-align: right; }
+
       .clasic .response-msg { margin: 5px 0; letter-spacing: 1px; font-weight: bold; font-size: 20px; text-align: center; border-radius: 5px;}
        .clasic .response-msg.set { border: solid 2px orange; background-color: rgba(133, 133, 133, .1); padding: 15px; }
        .clasic .response-msg.success { color: green; }
@@ -101,8 +103,15 @@ form { display: inline-block; position: relative; padding: 0; overflow: hidden; 
       .submit.wrap { position: relative; max-width: 275px; width: 100%; display: inline-block; }
 
       .cute .form-row { margin: 0 0 10px 0; }
+        .cute .response-msg { margin: 5px 0; letter-spacing: 1px; font-weight: bold; text-align: center; }
+          .cute .response-msg.success { color: green; }
+          .cute .response-msg.error { color: red; }
+          .cute .response-msg.invalid { color: orange; }
         .cute input { width: 100%; padding: 3px 5px; }
         .cute input[type=submit] { padding: 5px 15px; width: auto; display: inline-block; }
+
+    .reset-password { position: relative; top: 6px; }
+
 
   .btn { display: inline-block; border: 0; cursor: pointer; border-radius: 3px; text-decoration: none; }
    .btn.red { color: white;  background-color: rgba(255,0,0, .8); }

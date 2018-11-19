@@ -99,8 +99,32 @@
                     <input id="login-pass" name="pass" type="password" required/>
                 </label>
               </div>
+              <div class="form-row row">
+                <div class="col col-2">
+                  <a href="#reset-password" class="blue reset-password" data-popik="#reset-password" title="Reset password">Reset password</a>
+                </div>
+                <div class="col col-2 right">
+                  <input type="submit" value="Login" class="btn small blue"/>
+                </div>
+              </div>
+            </div>
+          </form>
+
+      </div>
+  </script>
+  <script id="reset-password" type="text/html">
+      <div class="form-wrap">
+          <form id="reset-form" data-form="reset-password" class="cute">
+            <div class="response-msg"></div>
+            <div class="form-body">
+              <div class="form-row">
+                <label for="login-email">
+                    <span>Email:</span>
+                    <input id="login-email" name="email" type="email" required />
+                </label>
+              </div>
               <div class="form-row right">
-                <input type="submit" value="Login" class="btn small blue"/>
+                <input type="submit" value="Reset password" class="btn small blue"/>
               </div>
             </div>
           </form>
