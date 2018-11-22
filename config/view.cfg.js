@@ -4,7 +4,7 @@ module.exports = function( root ) {
               defaultLayout: 'main',
               helpers: {
                 static: function(name) {
-                  return require('./lib/static.js').map(name);
+                  return require( root._dirname + '/lib/static.js').map(name);
                 }
               }
         });

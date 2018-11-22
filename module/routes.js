@@ -1,6 +1,7 @@
 module.exports = function(root) {
 
   const fs = require('fs');
+  const url = require('url');
 
   function init() {
 
@@ -14,7 +15,6 @@ module.exports = function(root) {
         next();
     });
 
-    /* ###  ## START: ROUTES ##### */
 
     root.app.get('/logout', (req, res) => { req.logout(); res.redirect('/') } );
 
@@ -22,11 +22,11 @@ module.exports = function(root) {
     // ignore /api/* 404 - as last
     root.app.use(/^\/(?!api|ajax).*/, (req, res) => {
 
-      let ctrl_path = root._dirname + '/controller' + req.originalUrl;
+      let ctrl_path_file = resolveParams( req );
 
-      if( fs.existsSync( ctrl_path + '.js' ) ) {
+      if( ctrl_path_file ) {
 
-        return require( ctrl_path + '.js' )(req, res);
+        return require( ctrl_path_file  )(req, res);
 
       } else {
 
@@ -35,15 +35,21 @@ module.exports = function(root) {
 
     } );
 
-    /* ##### END: ROUTES ##### */
-
   }
 
-  // controller autoloader
-  function _controller( ctrl_name ) {
 
+  function resolveParams( req ) {
 
+      let full_url = req.protocol + '://' + req.get('host') + req.originalUrl;
+      let _url = url.parse(full_url, true);
 
+      // resolve home page
+      let pathname = _url.pathname == '/' ? '/home' : _url.pathname;
+
+      // build path to file
+      let path = root._dirname + '/controller' + pathname + '.js';
+
+  return fs.existsSync( path  ) ? path : false;
   }
 
 
