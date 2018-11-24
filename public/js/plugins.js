@@ -2,13 +2,14 @@
 
   $.fn.resolve = function(res) {
 
-      var form = this;
+      var form = this,
+          msg = form.find('.response-msg');;
 
       switch( form.data('form') ) {
 
           case 'try':
               msg.html( res.msg );
-              form.find('.form_body').slideUp('fast');
+              form.find('.form-body').slideUp('fast');
 
               var code = $('<div>', {class: 'code', html: res.script});
               code.appendTo( form );
@@ -16,6 +17,12 @@
 
           case 'login':
               location.reload(); //TODO dynamic
+          break;
+
+          case 'register':
+              msg.html( 'User has been registered. Plase <a href="#login" data-popik="#login">Login</a>' );
+              form.find('.form-body').slideUp('fast');
+              $(document).trigger('dynamicElementCreated', [form]);
           break;
 
       }

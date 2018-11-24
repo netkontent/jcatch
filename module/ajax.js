@@ -34,14 +34,23 @@ module.exports = function(root) {
         return false;
       }
 
+      let ctrl_ajax_path_file = resolveParams( action );
 
-      if( fs.existsSync( ajax_path + action + '.js' ) ) {
+      if( ctrl_ajax_path_file ) {
 
-        return require( ajax_path + action + '.js' )(root, req_data, req, res, next);
+        let prom = require( ctrl_ajax_path_file )(root, req_data, req, res, next);
+
+        if( prom ) {
+          prom.then(  _res =>  {
+            res.json( _res );
+          } ).catch(err => {
+            console.error(err)
+          });
+        } 
 
       } else {
 
-        root.log('Controller [' + action + '] is defined, but is not found.', 'warning');
+        res.status('404').send('ajax - 404');
 
         return false;
       }
@@ -67,6 +76,14 @@ module.exports = function(root) {
       }
 
   return data;
+  }
+
+  function resolveParams( action ) {
+
+      // build absth path to file
+      let path = root._dirname + '/controller/ajax/' + action + '.js';
+
+  return fs.existsSync( path ) ? path : false;
   }
 
 

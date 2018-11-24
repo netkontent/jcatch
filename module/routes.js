@@ -16,7 +16,10 @@ module.exports = function(root) {
     });
 
 
-    root.app.get('/logout', (req, res) => { req.logout(); res.redirect('/') } );
+    root.app.get('/logout', (req, res) => {
+        req.logout();
+        res.redirect('/');
+    });
 
 
     // ignore /api/* 404 - as last
@@ -30,7 +33,7 @@ module.exports = function(root) {
 
       } else {
 
-        res.status('404').send('api - 404');
+        res.status('404').send('404');
       }
 
     } );
@@ -46,7 +49,7 @@ module.exports = function(root) {
       // resolve home page
       let pathname = _url.pathname == '/' ? '/home' : _url.pathname;
 
-      // build path to file
+      // build absth path to file
       let path = root._dirname + '/controller' + pathname + '.js';
 
   return fs.existsSync( path  ) ? path : false;

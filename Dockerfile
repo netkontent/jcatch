@@ -4,6 +4,7 @@ WORKDIR /usr/src/jcatch
 
 COPY package.json ./
 
+RUN npm install -g nodemon
 RUN npm install
 
 ENV MONGO_INITDB_ROOT_USERNAME mongo
@@ -15,4 +16,4 @@ COPY . .
 
 EXPOSE 80
 
-CMD ["npm", "start"]
+CMD npm run dev

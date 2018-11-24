@@ -1,21 +1,19 @@
 module.exports = function(root) {
 
   const passportLocalMongoose = require('passport-local-mongoose');
-  
+
   let jCatchUserSchema = root.db.engine().Schema({
     email: String,
     password: String,
-    domain: String, // TODO allow multiple projects
+    domain: { type: String, default: null}, // TODO allow multiple projects
     api_key: String,
     token: { type: String, default: null},
     created:  { type: Date, default: Date.now },
   });
 
-
+  const jCatchUserModel = root.db.engine().model('users', jCatchUserSchema);
 
   jCatchUserSchema.plugin(passportLocalMongoose);
-
-  const jCatchUserModel = root.db.engine().model('users', jCatchUserSchema);
 
 
   async function saveUser( email, pass ) {

@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon -L server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/netkontent/errorless.git"
+    "url": "git+https://github.com/netkontent/jcatch.git"
   },
   "keywords": [
     "js",
@@ -20,9 +21,9 @@
   "author": "Daniel Pakos",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/netkontent/errorless/issues"
+    "url": "https://github.com/netkontent/jcatch/issues"
   },
-  "homepage": "https://github.com/netkontent/errorless#readme",
+  "homepage": "https://github.com/netkontent/jcatch#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",

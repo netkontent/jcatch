@@ -44,7 +44,7 @@ const root = { _dirname: __dirname };
 
 
     //API
-    let apiConfig = require('./config/api.cfg.js')(root);
+    let apiConfig = require('./config/api.cfg.js')(root); 
 
         apiConfig.setMethods(['GET', 'POST']);
         apiCors = require('cors')( apiConfig.getCors() );

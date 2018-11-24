@@ -134,26 +134,28 @@
       <div class="form-wrap">
           <form id="login-form" data-form="register" class="cute">
             <div class="response-msg"></div>
-            <div class="form-row">
-              <label for="register-email">
-                  <span>Email:</span>
-                  <input id="register-email" name="email" type="email" required />
-              </label>
-            </div>
-            <div class="form-row">
-              <label for="register-pass">
-                  <span>Password:</span>
-                  <input id="register-pass" name="pass" type="password" required/>
-              </label>
-            </div>
-            <div class="form-row">
-              <label for="register-repass">
-                  <span>Retype password:</span>
-                  <input id="register-repass" name="repass" type="password" required/>
-              </label>
-            </div>
-            <div class="form-row right">
-              <input type="submit" value="Register" class="btn small blue"/>
+            <div class="form-body">
+              <div class="form-row">
+                <label for="register-email">
+                    <span>Email:</span>
+                    <input id="register-email" name="email" type="email" required />
+                </label>
+              </div>
+              <div class="form-row">
+                <label for="register-pass">
+                    <span>Password:</span>
+                    <input id="register-pass" pattern="{5,10}" name="pass" type="password" required oninvalid="this.setCustomValidity('Field must contain min. 5 characters')" onchange="try{setCustomValidity('')}catch(e){}" />
+                </label>
+              </div>
+              <div class="form-row">
+                <label for="register-repass">
+                    <span>Retype password:</span>
+                    <input id="register-repass" name="repass" type="password" required/>
+                </label>
+              </div>
+              <div class="form-row right">
+                <input type="submit" value="Register" class="btn small blue"/>
+              </div>
             </div>
           </form>
       </div>

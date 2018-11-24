@@ -40,16 +40,15 @@ module.exports = function(root, posted, req, res, next) {
           next(err);
         }
 
-        next();
+        res.status(200).json({
+              status: 'success',
+              data: {user: user._id}
+          });
 
       });
 
-      res.status(200).json({
-            status: 'success',
-            data: {user: user._id}
-        });
-
-
 
   })(req, res, next);
+
+
 }

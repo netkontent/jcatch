@@ -63,6 +63,6 @@ module.exports = function(root) {
 
   return {
     passport: getPassport
-  }
+  };
 
-}
+};
