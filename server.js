@@ -1,9 +1,5 @@
 const root = { _dirname: __dirname };
 
-    const nodemailer = require('nodemailer');
-
-
-
 
     // include custom logger
     root.log = require('./module/log.js');
@@ -44,7 +40,7 @@ const root = { _dirname: __dirname };
 
 
     //API
-    let apiConfig = require('./config/api.cfg.js')(root); 
+    let apiConfig = require('./config/api.cfg.js')(root);
 
         apiConfig.setMethods(['GET', 'POST']);
         apiCors = require('cors')( apiConfig.getCors() );
@@ -53,30 +49,6 @@ const root = { _dirname: __dirname };
 
     const api = require('./api/endpoints.js')(root);
 
-
-    /*
-    let mailTransport = nodemailer.createTransport('SMTP',{
-      service: 'Gmail',
-      auth: {
-        user: 'jcatch.smpt@gmail.com',
-        pass: 'jcatch1@#',
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
-
-
-
-    mailTransport.sendMail({
-      from: 'jCatch.io Team <jcatch.smpt@gmail.com>',
-      to: 'daniel@netkontent.pl',
-      subject: 'Hi',
-      text: 'Thank you.'
-    }, function(err){
-      if(err) console.error( 'Unable to send email: ' + error );
-    });
-    */
 
 
 // run app
